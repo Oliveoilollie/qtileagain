@@ -1,5 +1,5 @@
 # qtileagain
- install the dependinceys `yay -S qtile qtile-extras flameshot nitrogen dmenu picom lxsession lxappearance nm-applet dex blueman-manager xfce4-display-settings`
+ install the dependinceys `yay -S qtile qtile-extras flameshot nitrogen dmenu picom lxsession lxappearance nm-applet dex blueman-manager xfce4-display-settings volumeicon`
  
  than clone this into ~/.config/qtile and you should be set and ready to go!
  
