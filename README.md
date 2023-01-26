@@ -1,10 +1,10 @@
 # qtileagain
- install the dependinceys `yay -S qtile qtile-extras flameshot nitrogen dmenu rofi picom lxsession lxappearance nm-applet dex blueman-manager xfce4-display-settings volumeicon kitty pcmanfm`
+ install the dependinceys `yay -S qtile qtile-extras flameshot nitrogen dmenu rofi picom lxsession lxappearance nm-applet dex blueman-manager xfce4-display-settings volumeicon kitty pcmanfm jgmenu`
  
  than clone this into ~/.config/qtile and you should be set and ready to go!
  
  ----optional---
- (helpful)to get the zorin type windows download 'yay -S zorin-desktop-themes' and change it to zorin in lxappearance
+ (helpful)to get the zorin type windows download `yay -S zorin-desktop-themes` and change it to zorin in lxappearance
  
  you can also change the shortcuts i made to lanch programs in the '~/.config/qtile/config.py' file, just look for
  `#my own shortcuts
@@ -20,4 +20,6 @@
     
  
  
- ![2023-01-21_19-38](https://user-images.githubusercontent.com/121829495/213896807-16138ddd-d1a6-47c1-afc0-16bc395ec8ad.png)
+ 
+![image](https://user-images.githubusercontent.com/121829495/214737435-a2d4959a-1725-4210-b021-e5a4b352c298.png)
+![image](https://user-images.githubusercontent.com/121829495/214737521-acf95c22-99ef-4e52-a1a9-cadcc1761c45.png)
