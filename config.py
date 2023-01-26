@@ -24,6 +24,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import os
+import re
+import socket
+import subprocess
+
+
 from libqtile import bar, layout, widget, extension
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
@@ -79,7 +85,7 @@ keys = [
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     #my own shortcuts
     Key([mod], "b", lazy.spawn("brave"), desc="brave"),
-    Key([mod], "t", lazy.spawn("thunar"), desc="File Explorer"),
+    Key([mod], "t", lazy.spawn("pcmanfm"), desc="File Explorer"),
     Key([mod], "f", lazy.spawn(mybrowser), desc="firefox"),
     Key([mod], "s", lazy.spawn("steam"), desc="steam"),
     Key([mod], "d", lazy.spawn("discord"), desc="discord"),
@@ -87,15 +93,18 @@ keys = [
     Key([mod], "c", lazy.spawn("cider"), desc="cider"),
     Key([mod], "n", lazy.spawn("nemo"), desc="nemo"),
 
+#rofi
+    Key([mod], "p", lazy.spawn("rofi -show run"), desc="rofi"),
+
 #working dmenu
-    Key(['mod4'], 'p', lazy.run_extension(extension.DmenuRun(
-        dmenu_prompt=">",
-        dmenu_font="Andika-8",
-        background="#15181a",
-        foreground="#00ff00",
-        selected_background="#079822",
-        selected_foreground="#fff",
-    ))),
+    #Key(['mod4'], 'm', lazy.run_extension(extension.DmenuRun(
+        #dmenu_prompt=">",
+        #dmenu_font="Andika-8",
+        #background="#15181a",
+        #foreground="#00ff00",
+        #selected_background="#079822",
+        #selected_foreground="#fff",
+    #))),
 ]
 
 groups = [Group(i) for i in "123456789"]
@@ -158,6 +167,11 @@ screens = [
     Screen(
         top=bar.Bar(
             [
+                widget.Image(
+                    filename = "~/.config/qtile/icons/arch.png",
+                    mouse_callbacks = { 'Button1': lazy.spawn( ['jgmenu_run'] ) },
+                    background='#00BE67',
+                       ),
                 widget.CurrentLayout(background='#00BE67', foreground="#FFFFFF", **powerline),
                 #ik take in the chaos lmao
                 widget.GroupBox(highlight_method='line', foreground="#FFFFFF", active="#00BE67", this_current_screen_border="#00BE67", other_current_screen_border="#00BE67", this_screen_border="00A1D5", inactive="#FFFFFF"),
@@ -184,14 +198,24 @@ screens = [
                 widget.ThermalSensor(background='#00BE67', foreground='FFFFFF', **powerline),
                 #the end of my mess
                 widget.Clock(format="%Y-%m-%d %a %I:%M %p", background='#00A1D5', foreground='FFFFFF', **powerline),
-                widget.Bluetooth(background='#C05746', foreground='FFFFFF', **powerline)
-                #widget.QuickExit(background='#C05746', foreground='000000', **powerline),
+                #widget.Bluetooth(background='#C05746', foreground='FFFFFF', **powerline)
+                widget.QuickExit(background='#00BE67', foreground='#FFFFFF', **powerline),
+                #widget.Image(
+                    #filename = "~/.config/qtile/icons/arch.png",
+                    #mouse_callbacks = { 'Button1': lazy.spawn( ['jgmenu_run'] ) },
+                       #),
+                #widget.Image(
+                    #filename = "~/.config/qtile/icons/shutdown.png",
+                    #mouse_callbacks = { 'Button1': lazy.spawn( ['shutdown', 'now'] ) },
+                       #),
+
 
 
             ],
             24,
              border_width=[2, 0, 2, 0],  # Draw top and bottom borders
-             background="#30343f"
+             #background="#30343f"
+             background="#001D31"
              #border_color=["48A9A6", "48A9A6", "48A9A6", "48A9A6"]  # Borders are magenta
         ),
     ),

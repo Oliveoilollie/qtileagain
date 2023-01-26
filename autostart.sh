@@ -4,7 +4,7 @@ volumeicon &
 nitrogen --restore
 dex -a
 flameshot &
-rofi
+#rofi
 lxsession &
 #picom --vsync --sw-opti &
 lxappearance --restore
@@ -16,3 +16,5 @@ picom --vsync  --xrender-sync-fence --unredir-if-possible --force-win-blend --ba
 blueman-manager --restore
 #clipit &
 xfce4-display-settings --restore
+#xfce-theme-manager --restore
+xfsettingsd &
