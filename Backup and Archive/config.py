@@ -24,13 +24,31 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import os
+import re
+import socket
+import subprocess
+
+
 from libqtile import bar, layout, widget, extension
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
+#extras
+from qtile_extras import widget
+from qtile_extras.widget.decorations import PowerLineDecoration
+from qtile_extras.widget.decorations import BorderDecoration
 
 mod = "mod4"
-terminal = guess_terminal()
+terminal = "alacritty"
+mybrowser = "firefox"
+#altterm = "kitty"
+filemanager = "pcmanfm"
+
+
+#Please change this to where your start.sh file is at in the qtile config
+launcher = "/home/ollie/.config/qtile/start.sh"
+
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -64,23 +82,91 @@ keys = [
         lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack",
     ),
+    #return
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    Key([mod, "shift"], "Return", lazy.spawn(filemanager), desc="pcmanfm prob"),
+    
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
-    Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
+    Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
-    Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
+    
+    #rofi and menu thing
+    Key([mod], "r", lazy.spawn("rofi -show run"), desc="rofi"),
+    Key([mod], "p", lazy.spawn(launcher), desc="launcher"),
+    #Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
+    
+    #my own shortcuts (old)
+    Key([mod], "b", lazy.spawn("brave"), desc="brave"),
+    #Key([mod], "t", lazy.spawn("pcmanfm"), desc="File Explorer"),
+    Key([mod], "f", lazy.spawn(mybrowser), desc="firefox"),
+    Key([mod], "s", lazy.spawn("steam"), desc="steam"),
+    #Key([mod], "d", lazy.spawn("discord"), desc="discord"),
+    Key([mod], "g", lazy.spawn("heroic"), desc="heroic"),
+    Key([mod], "c", lazy.spawn("cider"), desc="cider"),
+    Key([mod], "n", lazy.spawn("nemo"), desc="nemo"),
+    
+
+
+    #super + letter thing
+    Key([mod], "d", lazy.spawn(launcher), desc="launcher"),
+    Key([mod], "h", lazy.spawn("urxvt 'htop task manager' -e htop"), desc="launcher"),
+    Key([mod], "t", lazy.spawn("urxvt"), desc="File Explorer"),
+    Key([mod], "m", lazy.spawn("pragha"), desc="music player"),
+    Key([mod], "r", lazy.spawn("rofi-theme-selector"), desc="music player"),
+    Key([mod], "v", lazy.spawn("pavucontrol"), desc="music player"),
+
+
+
+    #ctrl and alt
+    Key([ "control", "mod1" ], "h", lazy.spawn("urxvt 'htop task manager' -e htop"), desc="htop"),
+    Key([ "control", "mod1" ], "a", lazy.spawn("xfce4-appfinder"), desc="htop"),
+    Key([ "control", "mod1" ], "b", lazy.spawn("thunar"), desc="discord"),
+    Key([ "control", "mod1" ], "c", lazy.spawn("catfish"), desc="catfish"),
+    Key([ "control", "mod1" ], "d", lazy.spawn("discord"), desc="launcher"),
+    Key([ "control", "mod1" ], "e", lazy.spawn("archlinux-tweak-tool"), desc="tweaks"),
+    Key([ "control", "mod1" ], "f", lazy.spawn("firefox"), desc="broweser"),
+    Key([ "control", "mod1" ], "g", lazy.spawn("chromium -no-default-browser-check"), desc="broweser"),
+    Key([ "control", "mod1" ], "i", lazy.spawn("minecraft-launcher"), desc="minecraft"),
+    Key([ "control", "mod1" ], "k", lazy.spawn("archlinux-logout"), desc="logout"),
+    Key([ "control", "mod1" ], "l", lazy.spawn("archlinux-logout"), desc="archlinux-logout"),
+    Key([ "control", "mod1" ], "m", lazy.spawn("xfce4-settings-manager"), desc="settimgs"),
+    Key([ "control", "mod1" ], "o", lazy.spawn("kitty"), desc="kitty"),
+    Key([ "control", "mod1" ], "p", lazy.spawn("pamac-manager"), desc="software"),
+    Key([ "control", "mod1" ], "r", lazy.spawn("rofi-theme-selector"), desc="rofi-themes"),
+    Key([ "control", "mod1" ], "w", lazy.spawn("arcolinux-welcome-app"), desc="WELCOME"),
+
+
+
+    #F keys shortcuts (super)
+    Key([mod], "F1", lazy.spawn("chromium"), desc="chrome"),
+    Key([mod], "F2", lazy.spawn("brave"), desc="brave"),
+    Key([mod], "F3", lazy.spawn(mybrowser), desc="Default_Browser"),
+    Key([mod], "F4", lazy.spawn("gimp"), desc="gimp"),
+    Key([mod], "F5", lazy.spawn("obs"), desc="Screenrecoder"),
+    Key([mod], "F6", lazy.spawn("vlc --video-on-top"), desc="vlc"),
+    Key([mod], "F7", lazy.spawn("virtualbox"), desc="VM"),
+    Key([mod], "F8", lazy.spawn("thunar"), desc="XFCE-FM"),
+    Key([mod], "F9", lazy.spawn("evolution"), desc="email"),
+    Key([mod], "F10", lazy.spawn("spotify"), desc="musioc"),
+    Key([mod], "F11", lazy.spawn("rofi -theme-str 'window {width: 100%;height: 100%;}' -show drun"), desc="rofi2"),
+    Key([mod], "F12", lazy.spawn("rofi -show drun"), desc="rofi-again"),
+
+    #loging out bois
+    Key([mod], "x", lazy.spawn("archlinux-logout"), desc="nemo"),
+#rofi
+    #Key([mod], "p", lazy.spawn("rofi -show run"), desc="rofi"),
 
 #working dmenu
-    Key(['mod4'], 'd', lazy.run_extension(extension.DmenuRun(
-        dmenu_prompt=">",
-        dmenu_font="Andika-8",
-        background="#15181a",
-        foreground="#00ff00",
-        selected_background="#079822",
-        selected_foreground="#fff",
-    ))),
+    #Key(['mod4'], 'm', lazy.run_extension(extension.DmenuRun(
+        #dmenu_prompt=">",
+        #dmenu_font="Andika-8",
+        #background="#15181a",
+        #foreground="#00ff00",
+        #selected_background="#079822",
+        #selected_foreground="#fff",
+    #))),
 ]
 
 groups = [Group(i) for i in "123456789"]
@@ -110,36 +196,55 @@ for i in groups:
     )
 
 layouts = [
-    layout.Columns(border_focus_stack=["#d75f5f", "#8f3d3d"], border_width=4),
+    layout.Columns(border_focus_stack=["#2B0E66", "#2B0E66"], border_width=7, border_focus=["#00BE67"], border_normal=["#001D31"]),
     layout.Max(),
+    layout.Floating(border_focus=["#00BE67"])
     # Try more layouts by unleashing below layouts.
     # layout.Stack(num_stacks=2),
     # layout.Bsp(),
-    # layout.Matrix(),
+    #layout.Matrix(),
     # layout.MonadTall(),
     # layout.MonadWide(),
     # layout.RatioTile(),
-    # layout.Tile(),
+    #layout.Tile(),
     # layout.TreeTab(),
     # layout.VerticalTile(),
     # layout.Zoomy(),
 ]
 
 widget_defaults = dict(
-    font="sans",
+    font="nerd-fonts-ubuntu-mono",
     fontsize=12,
     padding=3,
 )
 extension_defaults = widget_defaults.copy()
 
+#powerlineextras
+powerline = {
+    "decorations": [
+        PowerLineDecoration(path='arrow_right')
+    ]
+}
 screens = [
     Screen(
         top=bar.Bar(
             [
-                widget.CurrentLayout(),
-                widget.GroupBox(),
+                #widget.Image(
+                    #filename = "~/.config/qtile/icons/arch.png",
+                    #mouse_callbacks = { 'Button1': lazy.spawn( ['jgmenu_run'] ) },
+                    #background='#00BE67',
+                       #),
+                widget.Image(
+                    filename = "~/.config/qtile/icons/arch.png",
+                    mouse_callbacks = { 'Button1': lazy.spawn( [launcher] ) },
+                    background='#00BE67',
+                       ),
+                widget.CurrentLayout(background='#00BE67', foreground="#FFFFFF", **powerline),
+                #ik take in the chaos lmao
+                widget.GroupBox(highlight_method='line', foreground="#FFFFFF", active="#00BE67", this_current_screen_border="#00BE67", other_current_screen_border="#00BE67", this_screen_border="00A1D5", inactive="#FFFFFF"),
+                #yes its over
                 widget.Prompt(),
-                widget.WindowName(),
+                widget.WindowName(foreground="#00BE67"),
                 widget.Chord(
                     chords_colors={
                         "launch": ("#ff0000", "#ffffff"),
@@ -147,23 +252,38 @@ screens = [
                     name_transform=lambda name: name.upper(),
                 ),
                 #widget.TextBox("Ollie OS", name="default"),
-                #widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
+                widget.Cmus(),
+                widget.TextBox("i use arch btw!", foreground="#00BE67", **powerline),
                 # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
                 # widget.StatusNotifier(),
-                #my mess (LOL)
-                widget.CPU(),
-                widget.Memory(),
-                widget.Memory(format='Swap: {SwapUsed: .0f}{ms}/{SwapTotal: .0f}{ms}'),
-                widget.ThermalSensor(),
-                widget.Systray(),
+                # #my mess (LOL)
+                widget.Systray(background='#00BE67', **powerline),
+                #widget.Bluetooth(),
+                widget.CPU(background='#00A1D5', foreground='FFFFFF', **powerline),
+                widget.Memory(background='#00BE67', foreground='FFFFFF', **powerline),
+                widget.Memory(format='Swap: {SwapUsed: .0f}{ms}/{SwapTotal: .0f}{ms}', background='#00A1D5', foreground='FFFFFF', **powerline),
+                widget.ThermalSensor(background='#00BE67', foreground='FFFFFF', **powerline),
                 #the end of my mess
-                widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-                widget.QuickExit(),
+                widget.Clock(format="%Y-%m-%d %a %I:%M %p", background='#00A1D5', foreground='FFFFFF', **powerline),
+                #widget.Bluetooth(background='#C05746', foreground='FFFFFF', **powerline)
+                widget.QuickExit(background='#00BE67', foreground='#FFFFFF', **powerline),
+                #widget.Image(
+                    #filename = "~/.config/qtile/icons/arch.png",
+                    #mouse_callbacks = { 'Button1': lazy.spawn( ['jgmenu_run'] ) },
+                       #),
+                #widget.Image(
+                    #filename = "~/.config/qtile/icons/shutdown.png",
+                    #mouse_callbacks = { 'Button1': lazy.spawn( ['shutdown', 'now'] ) },
+                       #),
+
+
 
             ],
             24,
              border_width=[2, 0, 2, 0],  # Draw top and bottom borders
-            # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
+             #background="#30343f"
+             background="#001D31"
+             #border_color=["48A9A6", "48A9A6", "48A9A6", "48A9A6"]  # Borders are magenta
         ),
     ),
 ]
@@ -221,7 +341,7 @@ from libqtile import hook
 
 @hook.subscribe.startup_once
 def autostart():
-    home = os.path.expanduser('~/.config/qtile/autostart.sh')
+    home = os.path.expanduser('~/.config/qtile/scripts/autostart.sh')
     subprocess.Popen([home])
 
 
