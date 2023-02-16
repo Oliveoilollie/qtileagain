@@ -1,5 +1,5 @@
 # qtileagain
- install the dependinceys `yay -S qtile qtile-extras flameshot nitrogen dmenu rofi picom lxsession lxappearance nm-applet dex blueman-manager xfce4-display-settings volumeicon kitty pcmanfm jgmenu dunst`
+ install the dependinceys `yay -S qtile qtile-extras flameshot nitrogen dmenu rofi picom lxsession lxappearance nm-applet dex blueman-manager xfce4-display-settings volumeicon kitty pcmanfm dunst`
  
  than clone this into ~/.config/qtile and you should be set and ready to go!
  
